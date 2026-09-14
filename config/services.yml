@@ -1,0 +1,36 @@
+services:
+    phpbblab.portal.repository.content:
+        class: phpbblab\portal\service\content_repository
+        arguments:
+            - '@dbal.conn'
+            - '@auth'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '%tables.forums%'
+            - '%tables.topics%'
+            - '%tables.posts%'
+
+    phpbblab.portal.controller.main:
+        class: phpbblab\portal\controller\main
+        arguments:
+            - '@config'
+            - '@config_text'
+            - '@template'
+            - '@user'
+            - '@auth'
+            - '@controller.helper'
+            - '@phpbblab.portal.repository.content'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+
+    phpbblab.portal.listener:
+        class: phpbblab\portal\event\listener
+        arguments:
+            - '@config'
+            - '@template'
+            - '@user'
+            - '@controller.helper'
+            - '@request'
+        tags:
+            - { name: event.listener }

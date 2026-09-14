@@ -1,0 +1,3 @@
+phpbblab_portal_home:
+    path: /portal
+    defaults: { _controller: phpbblab.portal.controller.main:home }

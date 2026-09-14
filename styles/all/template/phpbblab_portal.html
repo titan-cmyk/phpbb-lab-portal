@@ -1,0 +1,121 @@
+<!-- INCLUDE overall_header.html -->
+
+<div class="phpbblab-portal">
+    <div class="panel">
+        <div class="inner">
+            <div class="content">
+                <h2>{PHPBBLAB_PORTAL_TITLE}</h2>
+                <p>{PHPBBLAB_PORTAL_INTRO}</p>
+            </div>
+
+            <!-- IF S_PORTAL_PRIMARY_ACTIONS -->
+            <nav class="action-bar" aria-label="{L_PHPBBLAB_PORTAL_PRIMARY_ACTIONS}">
+                <!-- IF S_PORTAL_ACTION_FORUM --><a class="button" href="{U_PORTAL_FORUM}">{PORTAL_ACTION_FORUM_LABEL}</a><!-- ENDIF -->
+                <!-- IF S_PORTAL_ACTION_SUPPORT --><a class="button button-secondary" href="{U_PORTAL_SUPPORT}">{PORTAL_ACTION_PRIMARY_LABEL}</a><!-- ENDIF -->
+                <!-- IF S_PORTAL_ACTION_DOCS --><a class="button button-secondary" href="{U_PORTAL_DOCS}">{PORTAL_ACTION_SECONDARY_LABEL}</a><!-- ENDIF -->
+                <!-- IF S_PORTAL_ACTION_DOWNLOADS --><a class="button button-secondary" href="{U_PORTAL_DOWNLOADS}">{PORTAL_ACTION_RESOURCES_LABEL}</a><!-- ENDIF -->
+            </nav>
+            <!-- ENDIF -->
+        </div>
+    </div>
+
+    <!-- BEGIN portal_blocks -->
+        <!-- IF portal_blocks.S_ANNOUNCEMENT -->
+        <section class="panel" aria-labelledby="portal-{portal_blocks.KEY}-heading">
+            <div class="inner">
+                <div class="content">
+                    <h2 id="portal-{portal_blocks.KEY}-heading">{portal_blocks.BLOCK_TITLE}</h2>
+                    <p>{portal_blocks.ANNOUNCEMENT_BODY}</p>
+                    <!-- IF portal_blocks.S_ANNOUNCEMENT_LINK -->
+                    <p><a class="button button-secondary" href="{portal_blocks.U_ANNOUNCEMENT}">{portal_blocks.ANNOUNCEMENT_LINK}</a></p>
+                    <!-- ENDIF -->
+                </div>
+            </div>
+        </section>
+        <!-- ENDIF -->
+
+        <!-- IF portal_blocks.S_SUPPORT or portal_blocks.S_DOWNLOADS or portal_blocks.S_COMMUNITY or portal_blocks.S_LINKS -->
+        <section class="forabg" aria-labelledby="portal-{portal_blocks.KEY}-heading">
+            <div class="inner">
+                <ul class="topiclist">
+                    <li class="header">
+                        <dl class="row-item">
+                            <dt><div class="list-inner"><h2 id="portal-{portal_blocks.KEY}-heading" class="sr-only">{portal_blocks.BLOCK_TITLE}</h2><span aria-hidden="true">{portal_blocks.BLOCK_TITLE}</span></div></dt>
+                        </dl>
+                    </li>
+                </ul>
+                <ul class="topiclist forums">
+                    <!-- BEGIN items -->
+                    <li class="row">
+                        <dl class="row-item forum_read">
+                            <dt><div class="list-inner">
+                                <!-- IF portal_blocks.S_LINKS -->
+                                    <h3 class="sr-only">{portal_blocks.items.LINK_TITLE}</h3>
+                                    <a class="forumtitle" href="{portal_blocks.items.U_LINK}">{portal_blocks.items.LINK_TITLE}</a>
+                                    <!-- IF portal_blocks.items.LINK_DESCRIPTION --><div class="content">{portal_blocks.items.LINK_DESCRIPTION}</div><!-- ENDIF -->
+                                <!-- ELSE -->
+                                    <h3 class="sr-only">{portal_blocks.items.FORUM_NAME}</h3>
+                                    <a class="forumtitle" href="{portal_blocks.items.U_FORUM}">{portal_blocks.items.FORUM_NAME}</a>
+                                    <!-- IF portal_blocks.items.FORUM_DESCRIPTION --><div class="content">{portal_blocks.items.FORUM_DESCRIPTION}</div><!-- ENDIF -->
+                                <!-- ENDIF -->
+                            </div></dt>
+                        </dl>
+                    </li>
+                    <!-- END items -->
+                </ul>
+            </div>
+        </section>
+        <!-- ENDIF -->
+
+        <!-- IF portal_blocks.S_GUIDES or portal_blocks.S_FEATURED or portal_blocks.S_RECENT -->
+        <section class="forumbg" aria-labelledby="portal-{portal_blocks.KEY}-heading">
+            <div class="inner">
+                <ul class="topiclist">
+                    <li class="header">
+                        <dl class="row-item">
+                            <dt><div class="list-inner"><h2 id="portal-{portal_blocks.KEY}-heading" class="sr-only">{portal_blocks.BLOCK_TITLE}</h2><span aria-hidden="true">{portal_blocks.BLOCK_TITLE}</span></div></dt>
+                        </dl>
+                    </li>
+                </ul>
+                <ul class="topiclist topics">
+                    <!-- BEGIN items -->
+                    <li class="row<!-- IF portal_blocks.items.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+                        <dl class="row-item topic_read">
+                            <dt><div class="list-inner">
+                                <h3 class="sr-only">{portal_blocks.items.TOPIC_TITLE}</h3>
+                                <a class="topictitle" href="{portal_blocks.items.U_TOPIC}">{portal_blocks.items.TOPIC_TITLE}</a>
+                                <!-- IF portal_blocks.items.TOPIC_EXCERPT --><div class="content">{portal_blocks.items.TOPIC_EXCERPT}</div><!-- ENDIF -->
+                                <!-- IF portal_blocks.S_RECENT -->
+                                    <p class="author">{L_PHPBBLAB_PORTAL_LAST_ACTIVITY_LABEL} <time datetime="{portal_blocks.items.TOPIC_LASTDATE_RFC3339}">{portal_blocks.items.TOPIC_LASTDATE}</time> · <a href="{portal_blocks.items.U_FORUM}">{portal_blocks.items.FORUM_NAME}</a></p>
+                                    <p><a href="{portal_blocks.items.U_TOPIC}">{L_PHPBBLAB_PORTAL_READ_TOPIC}</a></p>
+                                <!-- ELSE -->
+                                    <p class="author">{L_PHPBBLAB_PORTAL_PUBLISHED} <time datetime="{portal_blocks.items.TOPIC_DATE_RFC3339}">{portal_blocks.items.TOPIC_DATE}</time></p>
+                                    <p><a href="{portal_blocks.items.U_TOPIC}"><!-- IF portal_blocks.S_GUIDES -->{L_PHPBBLAB_PORTAL_READ_GUIDE}<!-- ELSE -->{L_PHPBBLAB_PORTAL_READ_TOPIC}<!-- ENDIF --></a></p>
+                                <!-- ENDIF -->
+                            </div></dt>
+                        </dl>
+                    </li>
+                    <!-- END items -->
+                </ul>
+            </div>
+        </section>
+        <!-- ENDIF -->
+
+        <!-- IF portal_blocks.S_STATS -->
+        <section class="panel" aria-labelledby="portal-{portal_blocks.KEY}-heading">
+            <div class="inner">
+                <div class="content">
+                    <h2 id="portal-{portal_blocks.KEY}-heading">{portal_blocks.BLOCK_TITLE}</h2>
+                    <dl class="details">
+                        <dt>{L_PHPBBLAB_PORTAL_USERS}{L_COLON}</dt><dd>{portal_blocks.PORTAL_STAT_USERS}</dd>
+                        <dt>{L_PHPBBLAB_PORTAL_TOPICS}{L_COLON}</dt><dd>{portal_blocks.PORTAL_STAT_TOPICS}</dd>
+                        <dt>{L_PHPBBLAB_PORTAL_POSTS}{L_COLON}</dt><dd>{portal_blocks.PORTAL_STAT_POSTS}</dd>
+                    </dl>
+                </div>
+            </div>
+        </section>
+        <!-- ENDIF -->
+    <!-- END portal_blocks -->
+</div>
+
+<!-- INCLUDE overall_footer.html -->

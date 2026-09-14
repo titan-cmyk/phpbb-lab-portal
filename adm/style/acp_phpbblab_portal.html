@@ -1,0 +1,143 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_ACP_PHPBBLAB_PORTAL_SETTINGS}</h1>
+<p>{L_ACP_PHPBBLAB_PORTAL_EXPLAIN}</p>
+<p><strong>{L_ACP_PHPBBLAB_PORTAL_VERSION}</strong> {PHPBBLAB_PORTAL_VERSION}</p>
+
+<form id="acp_phpbblab_portal" method="post" action="{U_ACTION}">
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_GENERAL}</legend>
+        <dl>
+            <dt id="portal-enabled-label">{L_ACP_PHPBBLAB_PORTAL_ENABLED}</dt>
+            <dd role="group" aria-labelledby="portal-enabled-label"><label><input type="radio" class="radio" name="portal_enabled" value="1"<!-- IF PORTAL_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="portal_enabled" value="0"<!-- IF not PORTAL_ENABLED --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+        </dl>
+        <dl>
+            <dt id="portal-as-homepage-label">{L_ACP_PHPBBLAB_PORTAL_AS_HOMEPAGE}<br /><span>{L_ACP_PHPBBLAB_PORTAL_AS_HOMEPAGE_EXPLAIN}</span></dt>
+            <dd role="group" aria-labelledby="portal-as-homepage-label"><label><input type="radio" class="radio" name="portal_as_homepage" value="1"<!-- IF PORTAL_AS_HOMEPAGE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="portal_as_homepage" value="0"<!-- IF not PORTAL_AS_HOMEPAGE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+        </dl>
+        <dl>
+            <dt id="show-nav-label">{L_ACP_PHPBBLAB_PORTAL_SHOW_NAV}<br /><span>{L_ACP_PHPBBLAB_PORTAL_SHOW_NAV_EXPLAIN}</span></dt>
+            <dd role="group" aria-labelledby="show-nav-label"><label><input type="radio" class="radio" name="show_nav" value="1"<!-- IF SHOW_NAV --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="show_nav" value="0"<!-- IF not SHOW_NAV --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+        </dl>
+        <dl>
+            <dt><label for="portal_title">{L_ACP_PHPBBLAB_PORTAL_TITLE}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_TITLE_EXPLAIN}</span></dt>
+            <dd><input id="portal_title" name="portal_title" type="text" size="60" maxlength="180" value="{PORTAL_TITLE}" /></dd>
+        </dl>
+        <dl>
+            <dt><label for="portal_intro">{L_ACP_PHPBBLAB_PORTAL_INTRO}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_INTRO_EXPLAIN}</span></dt>
+            <dd><textarea id="portal_intro" name="portal_intro" rows="5" cols="60">{PORTAL_INTRO}</textarea></dd>
+        </dl>
+        <dl>
+            <dt><label for="meta_description">{L_ACP_PHPBBLAB_PORTAL_META_DESCRIPTION}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_META_DESCRIPTION_EXPLAIN}</span></dt>
+            <dd><textarea id="meta_description" name="meta_description" rows="3" cols="60">{META_DESCRIPTION}</textarea></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_ACTIONS}</legend>
+        <p>{L_ACP_PHPBBLAB_PORTAL_ACTIONS_EXPLAIN}</p>
+        <dl>
+            <dt><label for="action_forum_label">{L_ACP_PHPBBLAB_PORTAL_ACTION_FORUM}</label></dt>
+            <dd><input id="action_forum_label" name="action_forum_label" type="text" size="48" maxlength="100" value="{ACTION_FORUM_LABEL}" /></dd>
+        </dl>
+        <dl>
+            <dt><label for="action_primary_label">{L_ACP_PHPBBLAB_PORTAL_ACTION_PRIMARY}</label></dt>
+            <dd><input id="action_primary_label" name="action_primary_label" type="text" size="48" maxlength="100" value="{ACTION_PRIMARY_LABEL}" /></dd>
+        </dl>
+        <dl>
+            <dt><label for="action_secondary_label">{L_ACP_PHPBBLAB_PORTAL_ACTION_SECONDARY}</label></dt>
+            <dd><input id="action_secondary_label" name="action_secondary_label" type="text" size="48" maxlength="100" value="{ACTION_SECONDARY_LABEL}" /></dd>
+        </dl>
+        <dl>
+            <dt><label for="action_resources_label">{L_ACP_PHPBBLAB_PORTAL_ACTION_RESOURCES}</label></dt>
+            <dd><input id="action_resources_label" name="action_resources_label" type="text" size="48" maxlength="100" value="{ACTION_RESOURCES_LABEL}" /></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_BLOCKS}</legend>
+        <p>{L_ACP_PHPBBLAB_PORTAL_BLOCKS_EXPLAIN}</p>
+        <!-- BEGIN portal_block_settings -->
+        <dl>
+            <dt><strong>{portal_block_settings.LABEL}</strong></dt>
+            <dd>
+                <label for="show_{portal_block_settings.KEY}"><input id="show_{portal_block_settings.KEY}" type="checkbox" class="radio" name="show_{portal_block_settings.KEY}" value="1"<!-- IF portal_block_settings.SHOW --> checked="checked"<!-- ENDIF --> /> {L_ACP_PHPBBLAB_PORTAL_DISPLAY_BLOCK}</label><br />
+                <label for="order_{portal_block_settings.KEY}">{L_ACP_PHPBBLAB_PORTAL_ORDER}</label>
+                <input id="order_{portal_block_settings.KEY}" name="order_{portal_block_settings.KEY}" type="number" min="1" max="999" value="{portal_block_settings.ORDER}" size="4" /><br />
+                <label for="visibility_{portal_block_settings.KEY}">{L_ACP_PHPBBLAB_PORTAL_VISIBILITY}</label>
+                <select id="visibility_{portal_block_settings.KEY}" name="visibility_{portal_block_settings.KEY}">{portal_block_settings.VISIBILITY_OPTIONS}</select><br />
+                <label for="title_{portal_block_settings.KEY}">{L_ACP_PHPBBLAB_PORTAL_CUSTOM_TITLE}</label>
+                <input id="title_{portal_block_settings.KEY}" name="title_{portal_block_settings.KEY}" type="text" size="48" maxlength="120" value="{portal_block_settings.CUSTOM_TITLE}" />
+            </dd>
+        </dl>
+        <!-- END portal_block_settings -->
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_FEATURED}</legend>
+        <dl>
+            <dt><label for="featured_topic_ids">{L_ACP_PHPBBLAB_PORTAL_FEATURED_TOPIC_IDS}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_FEATURED_TOPIC_IDS_EXPLAIN}</span></dt>
+            <dd><input id="featured_topic_ids" name="featured_topic_ids" type="text" size="60" value="{FEATURED_TOPIC_IDS}" /></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_ANNOUNCEMENT}</legend>
+        <dl>
+            <dt><label for="announcement_body">{L_ACP_PHPBBLAB_PORTAL_ANNOUNCEMENT_BODY}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_ANNOUNCEMENT_BODY_EXPLAIN}</span></dt>
+            <dd><textarea id="announcement_body" name="announcement_body" rows="5" cols="60">{ANNOUNCEMENT_BODY}</textarea></dd>
+        </dl>
+        <dl>
+            <dt><label for="announcement_url">{L_ACP_PHPBBLAB_PORTAL_ANNOUNCEMENT_URL}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_ANNOUNCEMENT_URL_EXPLAIN}</span></dt>
+            <dd><input id="announcement_url" name="announcement_url" type="text" size="60" maxlength="500" value="{ANNOUNCEMENT_URL}" /></dd>
+        </dl>
+        <dl>
+            <dt><label for="announcement_link_label">{L_ACP_PHPBBLAB_PORTAL_ANNOUNCEMENT_LINK_LABEL}</label></dt>
+            <dd><input id="announcement_link_label" name="announcement_link_label" type="text" size="40" maxlength="100" value="{ANNOUNCEMENT_LINK_LABEL}" /></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_CUSTOM_LINKS}</legend>
+        <p>{L_ACP_PHPBBLAB_PORTAL_CUSTOM_LINKS_EXPLAIN}</p>
+        <dl>
+            <dt><label for="custom_links">{L_ACP_PHPBBLAB_PORTAL_CUSTOM_LINKS_FIELD}</label></dt>
+            <dd><textarea id="custom_links" name="custom_links" rows="8" cols="80">{CUSTOM_LINKS}</textarea></dd>
+        </dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_FORUMS}</legend>
+        <p>{L_ACP_PHPBBLAB_PORTAL_FORUMS_EXPLAIN}</p>
+        <dl><dt><label for="support_forum_id">{L_ACP_PHPBBLAB_PORTAL_SUPPORT_ID}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_SUPPORT_ID_EXPLAIN}</span></dt><dd><select id="support_forum_id" name="support_forum_id">{SUPPORT_FORUM_OPTIONS}</select></dd></dl>
+        <dl><dt><label for="docs_forum_id">{L_ACP_PHPBBLAB_PORTAL_DOCS_ID}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_DOCS_ID_EXPLAIN}</span></dt><dd><select id="docs_forum_id" name="docs_forum_id">{DOCS_FORUM_OPTIONS}</select></dd></dl>
+        <dl><dt><label for="guides_forum_id">{L_ACP_PHPBBLAB_PORTAL_GUIDES_ID}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_GUIDES_ID_EXPLAIN}</span></dt><dd><select id="guides_forum_id" name="guides_forum_id">{GUIDES_FORUM_OPTIONS}</select></dd></dl>
+        <dl><dt><label for="downloads_forum_id">{L_ACP_PHPBBLAB_PORTAL_DOWNLOADS_ID}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_DOWNLOADS_ID_EXPLAIN}</span></dt><dd><select id="downloads_forum_id" name="downloads_forum_id">{DOWNLOADS_FORUM_OPTIONS}</select></dd></dl>
+        <dl><dt><label for="community_forum_id">{L_ACP_PHPBBLAB_PORTAL_COMMUNITY_ID}</label><br /><span>{L_ACP_PHPBBLAB_PORTAL_COMMUNITY_ID_EXPLAIN}</span></dt><dd><select id="community_forum_id" name="community_forum_id">{COMMUNITY_FORUM_OPTIONS}</select></dd></dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_LIMITS}</legend>
+        <dl><dt><label for="guides_limit">{L_ACP_PHPBBLAB_PORTAL_GUIDES_LIMIT}</label></dt><dd><input id="guides_limit" name="guides_limit" type="number" min="1" max="10" value="{GUIDES_LIMIT}" /></dd></dl>
+        <dl><dt><label for="recent_limit">{L_ACP_PHPBBLAB_PORTAL_RECENT_LIMIT}</label></dt><dd><input id="recent_limit" name="recent_limit" type="number" min="1" max="12" value="{RECENT_LIMIT}" /></dd></dl>
+    </fieldset>
+
+    <fieldset>
+        <legend>{L_ACP_PHPBBLAB_PORTAL_CREDIT}</legend>
+        <dl>
+            <dt id="show-credit-label">{L_ACP_PHPBBLAB_PORTAL_SHOW_CREDIT}<br /><span>{L_ACP_PHPBBLAB_PORTAL_SHOW_CREDIT_EXPLAIN}</span></dt>
+            <dd role="group" aria-labelledby="show-credit-label"><label><input type="radio" class="radio" name="show_credit" value="1"<!-- IF SHOW_CREDIT --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+                <label><input type="radio" class="radio" name="show_credit" value="0"<!-- IF not SHOW_CREDIT --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+        </dl>
+    </fieldset>
+
+    <p class="submit-buttons">
+        <input class="button1" type="submit" name="submit" value="{L_SUBMIT}" />
+        {S_FORM_TOKEN}
+    </p>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
