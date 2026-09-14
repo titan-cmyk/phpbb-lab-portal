@@ -1,0 +1,15 @@
+# Local development / editor files
+/.idea/
+/.vscode/
+
+# Composer dependencies are not part of the extension source repository
+/vendor/
+/composer.lock
+
+# Test/cache artefacts
+.phpunit.result.cache
+*.log
+
+# Operating-system files
+.DS_Store
+Thumbs.db
