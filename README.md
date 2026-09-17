@@ -9,7 +9,7 @@ PHPBB Lab Portal adds a configurable portal to a phpBB board without modifying t
 - phpBB: `>= 3.3.17` and `< 3.4.0`
 - PHP: `>= 7.2.5`
 - Extension name: `phpbblab/portal`
-- Current version: `1.2.1`
+- Current version: `1.2.3`
 - License: GNU GPL v2 (`GPL-2.0-only`)
 
 ## Main features
