@@ -2,6 +2,15 @@
 
 All notable changes to PHPBB Lab Portal are documented here.
 
+## 1.2.1
+
+- Replaces the temporary bare-root redirect with phpBB 3.3.17's native permanent controller redirect.
+- Prevents anonymous crawlers from receiving `/portal?sid=...` as the portal destination.
+- Adds an explicit self-referencing canonical URL to the public portal page.
+- Keeps the portal route as the single indexable portal URL when the portal is configured as the site home page.
+- Fixes the Search Console duplicate-without-user-selected-canonical condition caused by `/`, `/portal` and session-ID URL variants.
+- Keeps zero CSS, theme independence and the existing portal configuration unchanged.
+
 ## 1.2.0
 
 - Makes the ACP and public defaults topic-neutral so the portal can be used on any phpBB community, not only support/documentation sites.
@@ -55,7 +64,7 @@ All notable changes to PHPBB Lab Portal are documented here.
 - Adds configurable SEO meta description.
 - Adds an optional portal-page footer credit linking to https://phpbb-lab.com/.
 - Refactors the public template to render blocks in the configured order.
-- Keeps zero CSS and theme independence.
+- Keeps zero CSS and full theme independence.
 
 ## 1.0.4
 
