@@ -2,10 +2,19 @@
 
 All notable changes to PHPBB Lab Portal are documented here.
 
+## 1.2.3
+
+- Fixes the remaining `sid` on the HTTP 301 from the bare board root by generating the portal route with an explicit empty session ID before sending the permanent redirect.
+- Keeps `/portal` as the canonical URL and preserves the clean self-referencing canonical without a session ID.
+
+## 1.2.2
+
+- Prevents phpBB session IDs from being appended to the portal route used by internal portal navigation and canonical generation.
+- Keeps `/portal` as the single canonical portal URL when the portal is configured as the board home page.
+
 ## 1.2.1
 
-- Replaces the temporary bare-root redirect with phpBB 3.3.17's native permanent controller redirect.
-- Prevents anonymous crawlers from receiving `/portal?sid=...` as the portal destination.
+- Replaces the temporary bare-root redirect with an HTTP 301 redirect to the portal route.
 - Adds an explicit self-referencing canonical URL to the public portal page.
 - Keeps the portal route as the single indexable portal URL when the portal is configured as the site home page.
 - Fixes the Search Console duplicate-without-user-selected-canonical condition caused by `/`, `/portal` and session-ID URL variants.
@@ -37,7 +46,7 @@ All notable changes to PHPBB Lab Portal are documented here.
 
 ## 1.1.3
 
-- When the portal is the configured site home page, the portal page shows only one breadcrumb: Portal.
+- When configured as the site home page, the portal page shows only one breadcrumb: Portal.
 - Forum/index pages keep the hierarchy Portal > forum index > current category/forum/topic.
 - Uses phpBB template variables only; no core or style modification is required.
 
@@ -64,7 +73,7 @@ All notable changes to PHPBB Lab Portal are documented here.
 - Adds configurable SEO meta description.
 - Adds an optional portal-page footer credit linking to https://phpbb-lab.com/.
 - Refactors the public template to render blocks in the configured order.
-- Keeps zero CSS and full theme independence.
+- Keeps zero CSS and theme independence.
 
 ## 1.0.4
 
