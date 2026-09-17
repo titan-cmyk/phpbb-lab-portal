@@ -8,6 +8,8 @@
 namespace phpbblab\portal\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class listener implements EventSubscriberInterface
@@ -59,11 +61,13 @@ class listener implements EventSubscriberInterface
             return;
         }
 
-        // phpBB 3.3.17 provides this helper specifically for permanent redirects
-        // from legacy/front-controller entry points to Symfony routes. It generates
-        // the route without a session id and sends HTTP 301, preventing anonymous
-        // crawlers from discovering /portal?sid=... variants of the home page.
-        \phpbb_redirect_to_controller('phpbblab_portal_home', array());
+        // Generate the portal route with an explicit empty session id.
+        // phpBB's phpbb_redirect_to_controller() uses the current SID when
+        // cookies are unavailable, which can create /portal?sid=... URLs.
+        $portal_url = $this->helper->route('phpbblab_portal_home', array(), false, '');
+        $response = new RedirectResponse($portal_url, Response::HTTP_MOVED_PERMANENTLY);
+        $response->send();
+        exit;
     }
 
     protected function is_board_root_request()
@@ -105,7 +109,7 @@ class listener implements EventSubscriberInterface
         $enabled = !empty($this->config['phpbblab_portal_enabled']);
         $show_nav = !empty($this->config['phpbblab_portal_show_nav']);
 
-        $portal_url = $enabled ? $this->helper->route('phpbblab_portal_home') : '';
+        $portal_url = $enabled ? $this->helper->route('phpbblab_portal_home', array(), true, '') : '';
         // Capture phpBB's native forum-index URL before this listener changes any
         // breadcrumb variables on the portal page. This keeps the Forum navigation
         // link independent from the portal route and from the active style.
@@ -119,16 +123,6 @@ class listener implements EventSubscriberInterface
             'U_PHPBBLAB_FORUM'      => $forum_index_url,
         ));
 
-        // When the portal is the configured site home page, keep breadcrumbs
-        // semantically aligned with the page the visitor is actually viewing.
-        //
-        // Portal page: Portal
-        // Forum pages: Portal > forum index > current hierarchy
-        //
-        // On the portal itself we reuse phpBB's mandatory index crumb as the single
-        // Portal crumb and suppress U_SITE_HOME, because prosilver always renders the
-        // index crumb. Everywhere else Portal remains U_SITE_HOME and phpBB keeps the
-        // administrator-configured forum-index label in L_INDEX.
         if ($enabled && $portal_as_homepage)
         {
             $is_portal_page = (bool) $this->template->retrieve_var('S_PHPBBLAB_PORTAL_PAGE');
@@ -139,16 +133,16 @@ class listener implements EventSubscriberInterface
                     'phpbblab_portal_home',
                     array(),
                     false,
-                    false,
+                    '',
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
                 $this->template->assign_vars(array(
-                    'U_SITE_HOME'                => '',
-                    'L_SITE_HOME'                => '',
-                    'U_INDEX'                    => $portal_url,
-                    'L_INDEX'                    => $this->user->lang('PHPBBLAB_PORTAL_NAV'),
-                    'PHPBBLAB_PORTAL_CANONICAL'  => $canonical_url,
+                    'U_SITE_HOME'               => '',
+                    'L_SITE_HOME'               => '',
+                    'U_INDEX'                   => $portal_url,
+                    'L_INDEX'                   => $this->user->lang('PHPBBLAB_PORTAL_NAV'),
+                    'PHPBBLAB_PORTAL_CANONICAL' => $canonical_url,
                 ));
             }
             else
