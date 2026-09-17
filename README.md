@@ -79,3 +79,21 @@ For a normal update:
 4. Enable the extension again so migrations can run.
 
 Do not use `extension:purge` for a normal update.
+
+## Validation before a public release
+
+Static checks do not replace real installation/update testing, ACP testing, permissions testing, mobile testing, VoiceOver/JAWS/NVDA testing or phpBB Extension Pre Validator (EPV) validation on the target environment.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## Author
+
+Michel Stassen — PHPBB Lab
+
+Official site: https://phpbb-lab.com
+
+## License
+
+PHPBB Lab Portal is distributed under the GNU General Public License v2. See [license.txt](license.txt).
