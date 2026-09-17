@@ -1,0 +1,144 @@
+name: Publish release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read extension version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(php -r '$j=json_decode(file_get_contents("composer.json"), true); if (!is_array($j) || empty($j["version"])) { fwrite(STDERR, "Invalid composer.json version\n"); exit(1); } echo $j["version"];')"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Extension version: ${VERSION}"
+
+      - name: Check for an existing release
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$VERSION" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Release ${VERSION} already exists; publication will be skipped."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build canonical phpBB package
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PACKAGE="PHPBB_LAB_EXT_PORTAL_${VERSION}.zip"
+          SHA_FILE="PHPBB_LAB_EXT_PORTAL_${VERSION}_SHA256.txt"
+
+          rm -rf build
+          mkdir -p build/phpbblab/portal
+          rsync -a \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.gitignore' \
+            --exclude 'build/' \
+            ./ build/phpbblab/portal/
+
+          test -f build/phpbblab/portal/composer.json
+          test -f build/phpbblab/portal/ext.php
+          test -f build/phpbblab/portal/license.txt
+
+          find build/phpbblab/portal -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+          php -r '$j=json_decode(file_get_contents("build/phpbblab/portal/composer.json"), true); if (!is_array($j) || json_last_error() !== JSON_ERROR_NONE) { fwrite(STDERR, "Invalid composer.json\n"); exit(1); } if (($j["name"] ?? "") !== "phpbblab/portal") { fwrite(STDERR, "Unexpected Composer package name\n"); exit(1); } if (($j["version"] ?? "") !== getenv("VERSION")) { fwrite(STDERR, "Composer version mismatch\n"); exit(1); }'
+
+          if find build/phpbblab/portal -type f \( -iname '*.css' -o -iname '*.scss' -o -iname '*.sass' -o -iname '*.less' \) -print -quit | grep -q .; then
+            echo "Forbidden stylesheet found in extension package." >&2
+            exit 1
+          fi
+
+          (cd build && zip -q -r "../${PACKAGE}" phpbblab)
+          HASH="$(sha256sum "$PACKAGE" | awk '{print $1}')"
+          printf 'SHA-256: %s\n' "$HASH" > "$SHA_FILE"
+
+          echo "PACKAGE=${PACKAGE}" >> "$GITHUB_ENV"
+          echo "SHA_FILE=${SHA_FILE}" >> "$GITHUB_ENV"
+          echo "SHA256=${HASH}" >> "$GITHUB_ENV"
+
+      - name: Prepare release notes
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          awk -v version="$VERSION" '
+            $0 == "## " version { found=1; next }
+            found && /^## / { exit }
+            found { print }
+          ' CHANGELOG.md > release-changes.md
+
+          if [ ! -s release-changes.md ]; then
+            echo "No changelog section found for ${VERSION}." >&2
+            exit 1
+          fi
+
+          {
+            echo "PHPBB Lab Portal ${VERSION} is a maintenance release focused on clean canonical URLs and session-ID-free portal navigation when the portal is used as the board home page."
+            echo
+            echo "## Changes"
+            cat release-changes.md
+            echo
+            echo "## Compatibility"
+            echo
+            echo "- phpBB >= 3.3.17 and < 3.4.0"
+            echo "- PHP >= 7.2.5"
+            echo "- Extension: phpbblab/portal"
+            echo "- License: GPL-2.0-only"
+            echo
+            echo "## Update"
+            echo
+            echo "Disable the extension, replace the existing files with the contents of the release package, purge the phpBB cache, then enable the extension again so the migration can run. Do not use extension:purge for a normal update."
+            echo
+            echo "The attached ZIP uses the canonical phpBB extension structure: phpbblab/portal/. A SHA-256 checksum file is provided alongside it."
+          } > release-body.md
+
+      - name: Publish GitHub release
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release create "$VERSION" \
+            "$PACKAGE" \
+            "$SHA_FILE" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "PHPBB Lab Portal ${VERSION}" \
+            --notes-file release-body.md \
+            --latest
+
+          echo "Published PHPBB Lab Portal ${VERSION}"
+          echo "SHA-256: ${SHA256}"
