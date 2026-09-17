@@ -8,6 +8,7 @@
 namespace phpbblab\portal\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class listener implements EventSubscriberInterface
 {
@@ -58,7 +59,11 @@ class listener implements EventSubscriberInterface
             return;
         }
 
-        \redirect($this->helper->route('phpbblab_portal_home'));
+        // phpBB 3.3.17 provides this helper specifically for permanent redirects
+        // from legacy/front-controller entry points to Symfony routes. It generates
+        // the route without a session id and sends HTTP 301, preventing anonymous
+        // crawlers from discovering /portal?sid=... variants of the home page.
+        \phpbb_redirect_to_controller('phpbblab_portal_home', array());
     }
 
     protected function is_board_root_request()
@@ -130,11 +135,20 @@ class listener implements EventSubscriberInterface
 
             if ($is_portal_page)
             {
+                $canonical_url = $this->helper->route(
+                    'phpbblab_portal_home',
+                    array(),
+                    false,
+                    false,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 $this->template->assign_vars(array(
-                    'U_SITE_HOME' => '',
-                    'L_SITE_HOME' => '',
-                    'U_INDEX'     => $portal_url,
-                    'L_INDEX'     => $this->user->lang('PHPBBLAB_PORTAL_NAV'),
+                    'U_SITE_HOME'                => '',
+                    'L_SITE_HOME'                => '',
+                    'U_INDEX'                    => $portal_url,
+                    'L_INDEX'                    => $this->user->lang('PHPBBLAB_PORTAL_NAV'),
+                    'PHPBBLAB_PORTAL_CANONICAL'  => $canonical_url,
                 ));
             }
             else
