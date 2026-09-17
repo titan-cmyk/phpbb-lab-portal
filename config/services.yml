@@ -24,6 +24,14 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
 
+    phpbblab.portal.controller.route:
+        class: phpbblab\portal\controller\portal_route
+        arguments:
+            - '@config'
+            - '@template'
+            - '@controller.helper'
+            - '@phpbblab.portal.controller.main'
+
     phpbblab.portal.listener:
         class: phpbblab\portal\event\listener
         arguments:
@@ -32,5 +40,6 @@ services:
             - '@user'
             - '@controller.helper'
             - '@request'
+            - '@phpbblab.portal.controller.main'
         tags:
             - { name: event.listener }
