@@ -3,7 +3,7 @@
   "type": "phpbb-extension",
   "description": "Accessible, theme-independent and topic-neutral phpBB portal with configurable blocks, content sources, actions, featured topics, announcements and custom links.",
   "homepage": "https://phpbb-lab.com",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "GPL-2.0-only",
   "authors": [
     {
