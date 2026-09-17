@@ -16,13 +16,15 @@ class listener implements EventSubscriberInterface
     protected $user;
     protected $helper;
     protected $request;
+    protected $portal_controller;
 
     public function __construct(
         \phpbb\config\config $config,
         \phpbb\template\template $template,
         \phpbb\user $user,
         \phpbb\controller\helper $helper,
-        \phpbb\request\request_interface $request
+        \phpbb\request\request_interface $request,
+        \phpbblab\portal\controller\main $portal_controller
     )
     {
         $this->config = $config;
@@ -30,6 +32,7 @@ class listener implements EventSubscriberInterface
         $this->user = $user;
         $this->helper = $helper;
         $this->request = $request;
+        $this->portal_controller = $portal_controller;
     }
 
     public static function getSubscribedEvents()
@@ -58,7 +61,20 @@ class listener implements EventSubscriberInterface
             return;
         }
 
-        \redirect($this->helper->route('phpbblab_portal_home'));
+        // Serve the portal directly on the board root. This avoids creating a
+        // second public homepage URL and lets phpBB expose one stable canonical
+        // URL without a session id.
+        $this->template->assign_var('U_CANONICAL', $this->board_root_url());
+
+        $response = $this->portal_controller->home();
+        if ($method === 'HEAD')
+        {
+            $response->setContent('');
+        }
+
+        $response->send();
+        \garbage_collection();
+        \exit_handler();
     }
 
     protected function is_board_root_request()
@@ -93,19 +109,31 @@ class listener implements EventSubscriberInterface
         return $request_path === $board_root_path;
     }
 
+    protected function board_root_url()
+    {
+        return rtrim((string) \generate_board_url(), '/') . '/';
+    }
+
     public function on_page_header_after($event)
     {
         $this->user->add_lang_ext('phpbblab/portal', 'common');
 
         $enabled = !empty($this->config['phpbblab_portal_enabled']);
         $show_nav = !empty($this->config['phpbblab_portal_show_nav']);
+        $portal_as_homepage = !empty($this->config['phpbblab_portal_as_homepage']);
 
-        $portal_url = $enabled ? $this->helper->route('phpbblab_portal_home') : '';
+        $portal_url = '';
+        if ($enabled)
+        {
+            $portal_url = $portal_as_homepage
+                ? $this->board_root_url()
+                : $this->helper->route('phpbblab_portal_home');
+        }
+
         // Capture phpBB's native forum-index URL before this listener changes any
         // breadcrumb variables on the portal page. This keeps the Forum navigation
         // link independent from the portal route and from the active style.
         $forum_index_url = (string) $this->template->retrieve_var('U_INDEX');
-        $portal_as_homepage = !empty($this->config['phpbblab_portal_as_homepage']);
 
         $this->template->assign_vars(array(
             'S_PHPBBLAB_PORTAL_NAV' => $enabled && $show_nav,

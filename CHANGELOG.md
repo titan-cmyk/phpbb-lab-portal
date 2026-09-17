@@ -2,6 +2,15 @@
 
 All notable changes to PHPBB Lab Portal are documented here.
 
+## 1.2.1
+
+- Serves the portal directly from the board root when the portal is configured as the site home page, removing the previous root-to-`/portal` redirect.
+- Permanently redirects `/portal` to the board root in home-page mode so there is only one public home-page URL.
+- Removes `sid` parameters from the public home-page URL and from the permanent `/portal` redirect target.
+- Exposes the board root as the canonical URL of the portal in home-page mode.
+- Adds a clean self-canonical URL to `/portal` when the portal is used as a standalone page.
+- Keeps `index.php` available as the normal phpBB forum index and keeps non-GET/HEAD root requests untouched.
+
 ## 1.2.0
 
 - Makes the ACP and public defaults topic-neutral so the portal can be used on any phpBB community, not only support/documentation sites.

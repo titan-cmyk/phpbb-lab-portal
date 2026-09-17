@@ -9,13 +9,15 @@ PHPBB Lab Portal adds a configurable portal to a phpBB board without modifying t
 - phpBB: `>= 3.3.17` and `< 3.4.0`
 - PHP: `>= 7.2.5`
 - Extension name: `phpbblab/portal`
-- Current version: `1.2.0`
+- Current version: `1.2.1`
 - License: GNU GPL v2 (`GPL-2.0-only`)
 
 ## Main features
 
 - Optional portal route at `/portal`.
 - Optional use of the portal as the board home page.
+- When used as the home page, the board root serves the portal directly and `/portal` permanently redirects to the root.
+- Canonical home-page handling without session IDs in public portal URLs.
 - Configurable portal title, introduction and meta description.
 - Configurable navigation and action labels.
 - Reusable source selectors for portal sections.
@@ -77,21 +79,3 @@ For a normal update:
 4. Enable the extension again so migrations can run.
 
 Do not use `extension:purge` for a normal update.
-
-## Validation before a public release
-
-Static checks do not replace real installation/update testing, ACP testing, permissions testing, mobile testing, VoiceOver/JAWS/NVDA testing or phpBB Extension Pre Validator (EPV) validation on the target environment.
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md).
-
-## Author
-
-Michel Stassen — PHPBB Lab
-
-Official site: https://phpbb-lab.com
-
-## License
-
-PHPBB Lab Portal is distributed under the GNU General Public License v2. See [license.txt](license.txt).
